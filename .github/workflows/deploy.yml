@@ -1,0 +1,29 @@
+name: Deploy Flask App to EC2
+
+on:
+  push:
+    branches:
+      - developer  # o la rama que prefieras
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Necesitas agregar esta clave en GitHub secrets
+
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@ec2-35-168-19-144.compute-1.amazonaws.com << 'EOF'
+          cd /home/ubuntu/flaskapp/flask_ci_cd # Ajusta la ruta a tu repositorio clonado
+          source vevn/bin/activate
+          git pull origin developer  # O la rama que estás usando
+          pip install -r requirements.txt  # Instalar dependencias si se han agregado nuevas
+          sudo systemctl restart gunicorn  # Si estás usando Gunicorn (ajusta si es necesario)
+        EOF
