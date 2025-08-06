@@ -25,5 +25,5 @@ jobs:
           source vevn/bin/activate
           git pull origin developer  # O la rama que estás usando
           pip install -r requirements.txt  # Instalar dependencias si se han agregado nuevas
-          #sudo systemctl restart gunicorn  # Si estás usando Gunicorn (ajusta si es necesario)
+          sudo systemctl restart gunicorn  # Si estás usando Gunicorn (ajusta si es necesario)
         EOF
