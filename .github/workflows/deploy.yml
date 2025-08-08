@@ -22,8 +22,10 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@ec2-35-168-19-144.compute-1.amazonaws.com << 'EOF'
           cd /home/ubuntu/flaskapp/flask_ci_cd # Ajusta la ruta a tu repositorio clonado
-          source vevn/bin/activate
+          source venv/bin/activate
+          #pkill  gunicorn  # Detener Gunicorn si está corriendo
           git pull origin developer  # O la rama que estás usando
           pip install -r requirements.txt  # Instalar dependencias si se han agregado nuevas
           sudo systemctl restart gunicorn  # Si estás usando Gunicorn (ajusta si es necesario)
+          #nohup gunicorn -w 2 app:app --bind 0.0.0.0:5001 & # Iniciar Gunicorn en segundo planoo
         EOF
